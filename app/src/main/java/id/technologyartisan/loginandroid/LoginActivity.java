@@ -1,6 +1,8 @@
 package id.technologyartisan.loginandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +18,20 @@ public class LoginActivity extends AppCompatActivity {
     private final String USERNAME="admin";
     private final String PASSWORD="123456";
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPreferences=getSharedPreferences("user", Context.MODE_PRIVATE);
+        String login=sharedPreferences.getString("login","");
+//        if (login==true){
+//            Intent intent=new Intent(this,MainActivity.class);
+//            startActivity(intent);
+//        }
         setContentView(R.layout.activity_login);
+
 
         etUsername=findViewById(R.id.et_username);
         etPassword=findViewById(R.id.et_password);
@@ -33,7 +45,15 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (inputUsername.equals(USERNAME)&&inputPassword.equals(PASSWORD)){
                     Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+
+                    sharedPreferences.edit()
+                            .putBoolean("login",true)
+                            .putString("nama","urip")
+                            .putString("username",inputUsername)
+                            .putInt("umur",21)
+                            .apply();
+
+                    Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
                 }else {
                     Toast.makeText(LoginActivity.this, "Login Gagal", Toast.LENGTH_SHORT).show();
